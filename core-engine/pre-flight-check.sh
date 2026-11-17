@@ -38,14 +38,14 @@ scan() {
 
 trap 'rm -f /tmp/nexus-core-scan.$$' EXIT
 
-scan 'hard-coded secrets' '(^|[^A-Za-z])(PRIVATE_KEY|SECRET|API_KEY|PASSWORD)[[:space:]]*[:=][[:space:]]*["'"']?[^"'"'[:space:]]+'
-scan 'Solidity unchecked call' '\.call\{value:|\.delegatecall\(|\.send\('
-scan 'Solidity tx.origin' '\btx\.origin\b'
-scan 'unsafe innerHTML' '\.innerHTML[[:space:]]*='
-scan 'unbounded timers/listeners' 'setInterval\(|addEventListener\('
-scan 'wildcard CORS' 'Access-Control-Allow-Origin["'"' ]*:["'"' ]*\*|cors\([^)]*origin["'"' ]*:["'"' ]*["'"' ]*\*["'"' ]*'
-scan 'insecure HTTP URLs' 'http://[^[:space:]"'"'<>]+'
-scan 'unverified dependency install' 'npm install|yarn add|pnpm add|pip install'
+scan 'hard-coded secrets' "(^|[^A-Za-z])(PRIVATE_KEY|SECRET|API_KEY|PASSWORD)[[:space:]]*[:=][[:space:]]*"
+scan 'Solidity unchecked call' "\\.call\\{value:|\\.delegatecall\\(|\\.send\\("
+scan 'Solidity tx.origin' "\\btx\\.origin\\b"
+scan 'unsafe innerHTML' "\\.innerHTML[[:space:]]*="
+scan 'unbounded timers/listeners' "setInterval\\(|addEventListener\\("
+scan 'wildcard CORS' "Access-Control-Allow-Origin[^[:alnum:]]*[*]|cors\\([^)]*origin[^)]*[*]"
+scan 'insecure HTTP URLs' "http://[^[:space:]]+"
+scan 'unverified dependency install' "npm install|yarn add|pnpm add|pip install"
 
 if [[ "$failures" -gt 0 ]]; then
   printf '\nPre-flight failed with %d finding group(s). Review each match and rerun.\n' "$failures" >&2
