@@ -1,0 +1,32 @@
+# {{projectName}} agent contract
+
+This project is initialized from [Nexus-Core](https://github.com/0o0r7/Nexus-Core), the authoritative standards gateway. Pin the referenced commit when reproducibility is required: `{{nexusCoreRef}}`.
+
+## Project metadata
+
+- Domain: `{{domain}}`
+- Runtime: `{{runtime}}`
+- Owner: `{{owner}}`
+
+## Required behavior
+
+- Route work through the Nexus-Core domain selector before implementation.
+- Apply the selected knowledge base and cite official references before code changes.
+- Run `core-engine/pre-flight-check.sh` against changed targets.
+- Report deprecation scans, security findings, tests, and residual risk.
+- Prefer native platform APIs and verified dependencies.
+- Define cleanup for listeners, observers, timers, workers, sockets, GPU resources, subscriptions, and agent processes.
+
+## Project-specific boundaries
+
+{{#each boundaries}}
+- {{this}}
+{{/each}}
+
+## Verification commands
+
+```sh
+{{verificationCommand}}
+```
+
+Upstream contract: https://github.com/0o0r7/Nexus-Core/tree/{{nexusCoreRef}}

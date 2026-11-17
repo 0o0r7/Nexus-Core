@@ -1,0 +1,26 @@
+name: Automated code linter
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Validate shell syntax
+        run: bash -n core-engine/pre-flight-check.sh
+      - name: Check executable permission
+        run: test -x core-engine/pre-flight-check.sh
+      - name: Run Nexus-Core pre-flight scan
+        run: core-engine/pre-flight-check.sh .
+      - name: Validate Markdown links and structure
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: '**/*.md'

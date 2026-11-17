@@ -1,0 +1,51 @@
+name: Documentation health check
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.md'
+      - '.github/workflows/doc-health-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Check required documents
+        run: |
+          set -euo pipefail
+          test -s README.md
+          test -s .cursorrules
+          for file in \
+            core-engine/domain-selector-flowchart.md \
+            core-engine/strict-verification-protocol.md \
+            knowledge-bases/01-web-mdn-anti-patterns.md \
+            knowledge-bases/02-web3-security-rules.md \
+            knowledge-bases/03-web-game-performance.md \
+            knowledge-bases/04-agentic-runtimes.md; do
+            test -s "$file"
+          done
+      - name: Check upstream reference reachability
+        run: |
+          set -euo pipefail
+          for url in \
+            https://developer.mozilla.org/en-US/docs/Web \
+            https://docs.soliditylang.org/ \
+            https://github.com/ethereum/solidity/security/swc-registry \
+            https://docs.base.org/; do
+            curl --fail --location --silent --show-error --head --max-time 20 "$url" >/dev/null
+          done
+      - name: Detect stale review markers
+        run: |
+          if grep -RInE --exclude-dir=.git '\b(TODO|FIXME|deprecated without migration)\b' .; then
+            echo 'Stale documentation markers found.' >&2
+            exit 1
+          fi
