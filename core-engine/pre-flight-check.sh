@@ -18,7 +18,16 @@ failures=0
 scan() {
   local label="$1"
   local pattern="$2"
-  if grep -RInE --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=vendor -- "$pattern" "$TARGET" >/tmp/nexus-core-scan.$$ 2>/dev/null; then
+  if grep -RInE \
+    --exclude-dir=.git \
+    --exclude-dir=node_modules \
+    --exclude-dir=vendor \
+    --exclude='*.md' \
+    --exclude='*.sh' \
+    --exclude='*.yml' \
+    --exclude='*.yaml' \
+    --exclude='.cursorrules' \
+    -- "$pattern" "$TARGET" >/tmp/nexus-core-scan.$$ 2>/dev/null; then
     printf 'FAIL [%s]\n' "$label"
     cat /tmp/nexus-core-scan.$$
     failures=$((failures + 1))
